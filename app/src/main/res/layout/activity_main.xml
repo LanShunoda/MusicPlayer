@@ -7,14 +7,24 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.plorial.musicplayer.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:name="com.plorial.musicplayer.SongsListFragment"
+        android:name="com.plorial.musicplayer.ui.SongsListFragment"
         android:id="@+id/fragment"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        tools:layout="@layout/songs_list_fragment" />
+        tools:layout="@layout/songs_list_fragment"
+        android:layout_above="@+id/fragment2" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.plorial.musicplayer.ui.ControlsFragment"
+        android:id="@+id/fragment2"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/controls_fragment" />
 </RelativeLayout>

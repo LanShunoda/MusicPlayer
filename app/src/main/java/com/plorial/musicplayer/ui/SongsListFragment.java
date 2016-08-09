@@ -1,20 +1,16 @@
-package com.plorial.musicplayer;
+package com.plorial.musicplayer.ui;
 
 import android.app.Fragment;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.plorial.musicplayer.pojo.SongsListItem;
+import com.plorial.musicplayer.AudioFilesPresenter;
+import com.plorial.musicplayer.R;
+import com.plorial.musicplayer.SongsArrayAdapter;
 
 /**
  * Created by plorial on 8/9/16.

@@ -35,7 +35,7 @@ public class SongsListItem {
         return duration;
     }
 
-    public String getUri() {
+    public String getData() {
         return data;
     }
 }

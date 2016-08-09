@@ -22,18 +22,11 @@ public class SongsArrayAdapter extends ArrayAdapter<SongsListItem> {
 
     private Context context;
     private int resource;
-    private Collection<? extends SongsListItem> items;
 
     public SongsArrayAdapter(Context context, int resource) {
         super(context, resource);
         this.context = context;
         this.resource = resource;
-    }
-
-    @Override
-    public void addAll(Collection<? extends SongsListItem> collection) {
-        super.addAll(collection);
-        items = collection;
     }
 
     @Override
@@ -57,11 +50,6 @@ public class SongsArrayAdapter extends ArrayAdapter<SongsListItem> {
             }else {
                 d = 0;
             }
-//            String duration = String.format("%d : %d",
-//                    TimeUnit.MILLISECONDS.toMinutes(d),
-//                    TimeUnit.MILLISECONDS.toSeconds(d) -
-//                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(d))
-//            );
             SimpleDateFormat format = new SimpleDateFormat("mm:ss");
             String duration = format.format(new Date(d));
             tvDuration.setText(duration);
