@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.plorial.musicplayer.pojo.SongsListItem;
+
 /**
  * Created by plorial on 8/9/16.
  */
@@ -22,7 +24,7 @@ public class SongsListFragment extends Fragment {
     private static final String TAG = SongsListFragment.class.getSimpleName();
 
     private ListView listView;
-    private ArrayAdapter<String> adapter;
+    private SongsArrayAdapter adapter;
     private AudioFilesPresenter presenter;
 
     @Nullable
@@ -36,7 +38,7 @@ public class SongsListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = (ListView) view.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1);
+        adapter = new SongsArrayAdapter(getActivity(), R.layout.songs_list_item);
         listView.setAdapter(adapter);
         presenter = new AudioFilesPresenter();
         presenter.getAllSongs(adapter);
