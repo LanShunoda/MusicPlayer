@@ -1,24 +1,35 @@
-package com.plorial.musicplayer;
+package com.plorial.musicplayer.presenter;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 
+import com.plorial.musicplayer.MVP_Main;
+import com.plorial.musicplayer.SongsArrayAdapter;
 import com.plorial.musicplayer.pojo.SongsListItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by plorial on 8/9/16.
  */
-public class AudioFilesPresenter {
+public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.ProvidedPresenterOps, MVP_Main.RequiredPresenterOps{
 
-    private static final String TAG = AudioFilesPresenter.class.getSimpleName();
+    private static final String TAG = Presenter.class.getSimpleName();
+
+    private MVP_Main.RequiredViewOps viewOps;
+
+    private SongsArrayAdapter adapter;
+    private MVP_Main.ProvidedModelOps model;
+
+    public Presenter(MVP_Main.RequiredViewOps viewOps) {
+        this.viewOps = viewOps;
+    }
 
     public void getAllSongs(SongsArrayAdapter adapter){
         ContentResolver contentResolver = adapter.getContext().getContentResolver();
@@ -42,5 +53,62 @@ public class AudioFilesPresenter {
             } while (cursor.moveToNext());
             adapter.addAll(items);
         }
+        this.adapter = adapter;
+    }
+
+    @Override
+    public void selectSong(int position) {
+        Log.i(TAG, "Select song");
+        SongsListItem currentSong = adapter.getItem(position);
+        try {
+            model.setData(currentSong.getData());
+            model.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void play() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void next() {
+
+    }
+
+    @Override
+    public void prev() {
+
+    }
+
+    @Override
+    public void seekTo(int position) {
+
+    }
+
+    @Override
+    public Context getAppContext() {
+        return viewOps.getAppContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return viewOps.getActivityContext();
+    }
+
+    public void setModel(MVP_Main.ProvidedModelOps model){
+        this.model = model;
     }
 }

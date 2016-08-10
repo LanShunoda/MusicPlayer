@@ -55,10 +55,11 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <android.support.v7.widget.AppCompatImageView
+        <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/previous_black"/>
+            app:srcCompat="@drawable/previous_black"
+            android:id="@+id/prevBtn"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -66,10 +67,11 @@
             android:layout_weight="1"
             android:gravity="center_horizontal">
 
-            <android.support.v7.widget.AppCompatImageView
+            <android.support.v7.widget.AppCompatImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/stop_black"/>
+                app:srcCompat="@drawable/stop_black"
+                android:id="@+id/stopBtn"/>
 
             <com.wnafee.vector.MorphButton
                 android:id="@+id/playPauseBtn"
@@ -78,9 +80,10 @@
                 app:vc_startDrawable="@drawable/ic_pause_to_play"
                 app:vc_endDrawable="@drawable/ic_play_to_pause" />
         </LinearLayout>
-        <android.support.v7.widget.AppCompatImageView
+        <android.support.v7.widget.AppCompatImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/next_black"/>
+            app:srcCompat="@drawable/next_black"
+            android:id="@+id/nextBtn"/>
     </LinearLayout>
 </LinearLayout>
