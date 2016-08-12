@@ -3,9 +3,12 @@ package com.plorial.musicplayer.presenter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.SongsArrayAdapter;
@@ -23,9 +26,13 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     private static final String TAG = Presenter.class.getSimpleName();
 
     private MVP_Main.RequiredViewOps viewOps;
+    private MVP_Main.ProvidedModelOps model;
+    private MVP_Main.RequiredSongsListOps requiredSongsListOps;
+    private MVP_Main.RequiredControlsOps requiredControlsOps;
 
     private SongsArrayAdapter adapter;
-    private MVP_Main.ProvidedModelOps model;
+    private int currentSong;
+    private Handler handler;
 
     public Presenter(MVP_Main.RequiredViewOps viewOps) {
         this.viewOps = viewOps;
@@ -36,9 +43,10 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
         if (cursor == null) {
-            // query failed, handle error.
+            Log.e(TAG, "Error opening audio");
         } else if (!cursor.moveToFirst()) {
-            // no media on the device
+           Log.i(TAG, "No media on device");
+            Toast.makeText(getActivityContext(),"No media on device", Toast.LENGTH_LONG).show();
         } else {
             List<SongsListItem> items = new ArrayList<>();
             do {
@@ -58,44 +66,54 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void selectSong(int position) {
-        Log.i(TAG, "Select song");
+        requiredSongsListOps.updateCurrentSong(position, currentSong);
+        this.currentSong = position;
         SongsListItem currentSong = adapter.getItem(position);
         try {
             model.setData(currentSong.getData());
-            model.play();
+           play();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        requiredControlsOps.updateSong(currentSong.getArtist(), currentSong.getTitle(), currentSong.getAlbum(), currentSong.getDuration());
+    }
+
+    @Override
+    public void setRequiredSongsListOps(MVP_Main.RequiredSongsListOps requiredSongsListOps) {
+        this.requiredSongsListOps = requiredSongsListOps;
     }
 
     @Override
     public void play() {
-
+        model.play();
+        startPlayProgressUpdater();
     }
 
     @Override
     public void pause() {
-
+        model.pause();
     }
 
     @Override
     public void stop() {
-
+        model.stop();
     }
 
     @Override
     public void next() {
-
+        currentSong++;
+        selectSong(currentSong);
     }
 
     @Override
     public void prev() {
-
+        currentSong--;
+        selectSong(currentSong);
     }
 
     @Override
     public void seekTo(int position) {
-
+        model.seekTo(position);
     }
 
     @Override
@@ -110,5 +128,34 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     public void setModel(MVP_Main.ProvidedModelOps model){
         this.model = model;
+        model.setPresenter(this);
+        model.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                next();
+            }
+        });
+    }
+
+    @Override
+    public void setRequiredControlsOps(MVP_Main.RequiredControlsOps requiredControlsOps) {
+        this.requiredControlsOps = requiredControlsOps;
+        handler = requiredControlsOps.getHandler();
+    }
+
+    private void startPlayProgressUpdater() {
+
+        requiredControlsOps.setProgress(model.getCurrentPosition());
+
+        if (model.isPlaying()) {
+            Runnable notification = new Runnable() {
+                public void run() {
+                    startPlayProgressUpdater();
+                }
+            };
+            handler.postDelayed(notification,1000);
+        }else{
+            model.pause();
+        }
     }
 }

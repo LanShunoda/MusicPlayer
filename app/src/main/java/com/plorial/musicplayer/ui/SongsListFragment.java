@@ -3,7 +3,7 @@ package com.plorial.musicplayer.ui;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +13,21 @@ import android.widget.ListView;
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.SongsArrayAdapter;
+import com.wnafee.vector.compat.VectorDrawable;
 
 /**
  * Created by plorial on 8/9/16.
  */
-public class SongsListFragment extends Fragment implements AdapterView.OnItemClickListener{
+public class SongsListFragment extends Fragment implements AdapterView.OnItemClickListener, MVP_Main.RequiredSongsListOps{
 
     private static final String TAG = SongsListFragment.class.getSimpleName();
 
     private ListView listView;
     private SongsArrayAdapter adapter;
     private MVP_Main.ProvidedPresenterPlaylist presenter;
+
+    private VectorDrawable play;
+    private VectorDrawable audioTrack;
 
     @Nullable
     @Override
@@ -39,16 +43,26 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
         adapter = new SongsArrayAdapter(getActivity(), R.layout.songs_list_item);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        play = VectorDrawable.getDrawable(getActivity(), R.drawable.ic_play_arrow_black_36dp);
+        audioTrack = VectorDrawable.getDrawable(getActivity(), R.drawable.audiotrack_black);
         if(getActivity() instanceof MainActivity) {
             MainActivity activity = (MainActivity) getActivity();
             presenter = activity.getProvidedPresenterPlaylist();
             presenter.getAllSongs(adapter);
+            presenter.setRequiredSongsListOps(this);
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         presenter.selectSong(i);
-        Log.i(TAG, "On Item clicked");
+    }
+
+    @Override
+    public void updateCurrentSong(int currentSongPos, int prevSong) {
+//        AppCompatImageView songNew = (AppCompatImageView) listView.getChildAt(currentSongPos).findViewById(R.id.playSong);
+//        AppCompatImageView songOld = (AppCompatImageView) listView.getChildAt(prevSong).findViewById(R.id.playSong);
+//        songNew.setImageDrawable(play);
+//        songOld.setImageDrawable(audioTrack);
     }
 }

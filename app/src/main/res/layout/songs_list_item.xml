@@ -8,7 +8,8 @@
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/audiotrack_black"/>
+        app:srcCompat="@drawable/audiotrack_black"
+        android:id="@+id/playSong"/>
 
     <LinearLayout
         android:orientation="vertical"

@@ -8,6 +8,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.plorial.musicplayer.presenter.Presenter;
+
 import java.io.IOException;
 
 /**
@@ -20,6 +22,7 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     private final IBinder binder = new LocalBinder();
 
     private MediaPlayer player;
+    private Presenter presenter;
 
     @Nullable
     @Override
@@ -48,22 +51,22 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
 
     @Override
     public void pause() {
-
+        player.pause();
     }
 
     @Override
     public void stop() {
-
+        player.stop();
     }
 
     @Override
     public void next() {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void prev() {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -74,7 +77,35 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     @Override
     public void setData(String data) throws IOException {
         Log.i(TAG, "Service setData " + data);
+        if(player.isPlaying()){
+            player.reset();
+        }
         player.setDataSource(data);
+    }
+
+    @Override
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {
+        player.setOnCompletionListener(listener);
+    }
+
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public Presenter getPresenter() {
+        return presenter;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return player.isPlaying();
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return player.getCurrentPosition();
     }
 
     @Override

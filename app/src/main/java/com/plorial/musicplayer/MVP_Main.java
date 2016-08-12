@@ -1,6 +1,10 @@
 package com.plorial.musicplayer;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.os.Handler;
+
+import com.plorial.musicplayer.presenter.Presenter;
 
 import java.io.IOException;
 
@@ -18,6 +22,16 @@ public interface MVP_Main {
         Context getActivityContext();
     }
 
+    interface RequiredSongsListOps{
+        void updateCurrentSong(int currentSongPos, int prevSong);
+    }
+
+    interface RequiredControlsOps{
+        void updateSong(String artist, String song, String album, String duration);
+        void setProgress(int progress);
+        Handler getHandler();
+    }
+
     interface Controls{
         void play();
         void pause();
@@ -32,12 +46,13 @@ public interface MVP_Main {
      */
     interface ProvidedPresenterOps extends Controls {
         // Presenter operations permitted to View
-
+        void setRequiredControlsOps(RequiredControlsOps requiredControlsOps);
     }
 
     interface ProvidedPresenterPlaylist {
         void getAllSongs(SongsArrayAdapter adapter);
         void selectSong(int position);
+        void setRequiredSongsListOps(RequiredSongsListOps requiredSongsListOps);
     }
 
     /**
@@ -55,6 +70,11 @@ public interface MVP_Main {
      */
     interface ProvidedModelOps extends Controls {
         void setData(String data) throws IOException;
+        void setOnCompletionListener(MediaPlayer.OnCompletionListener listener);
+        void setPresenter(Presenter presenter);
+        Presenter getPresenter();
+        boolean isPlaying();
+        int getCurrentPosition();
 
     }
 }

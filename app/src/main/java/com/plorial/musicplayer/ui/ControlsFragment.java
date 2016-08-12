@@ -2,6 +2,7 @@ package com.plorial.musicplayer.ui;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
@@ -14,14 +15,24 @@ import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.wnafee.vector.MorphButton;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by plorial on 8/10/16.
  */
-public class ControlsFragment extends Fragment implements View.OnClickListener{
+public class ControlsFragment extends Fragment implements View.OnClickListener, MVP_Main.RequiredControlsOps{
 
     private MVP_Main.ProvidedPresenterOps presenter;
 
+    private Handler handler = new Handler();
+
     private MorphButton playPauseButton;
+    private SeekBar seekBar;
+    private TextView tvPlayedTime;
+    private TextView tvDuration;
+    private TextView tvArtistSong;
+    private TextView tvAlbum;
 
     @Nullable
     @Override
@@ -36,6 +47,7 @@ public class ControlsFragment extends Fragment implements View.OnClickListener{
         if(getActivity() instanceof MainActivity) {
             MainActivity activity = (MainActivity) getActivity();
             presenter = activity.getProvidedPresenterOps();
+            presenter.setRequiredControlsOps(this);
         }
         setupView(view);
     }
@@ -49,11 +61,16 @@ public class ControlsFragment extends Fragment implements View.OnClickListener{
         prevButton.setOnClickListener(this);
         AppCompatImageButton nextButton = (AppCompatImageButton) view.findViewById(R.id.nextBtn);
         nextButton.setOnClickListener(this);
-        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
-        TextView tvPlayedTime = (TextView) view.findViewById(R.id.tvPlayedTime);
-        TextView tvDuration = (TextView) view.findViewById(R.id.tvDuration_controls);
-        TextView tvArtistSong = (TextView) view.findViewById(R.id.tvArtistSong_controls);
-        TextView tvAlbum = (TextView) view.findViewById(R.id.tvAlbum_controls);
+
+        seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+
+        tvPlayedTime = (TextView) view.findViewById(R.id.tvPlayedTime);
+
+        tvDuration = (TextView) view.findViewById(R.id.tvDuration_controls);
+
+        tvArtistSong = (TextView) view.findViewById(R.id.tvArtistSong_controls);
+
+        tvAlbum = (TextView) view.findViewById(R.id.tvAlbum_controls);
     }
 
     @Override
@@ -78,5 +95,28 @@ public class ControlsFragment extends Fragment implements View.OnClickListener{
                 presenter.next();
                 break;
         }
+    }
+
+    @Override
+    public void updateSong(String artist, String song, String album, String duration) {
+        tvArtistSong.setText(artist + " - " + song);
+        tvAlbum.setText(album);
+        long d;
+        if(duration != null) d = Long.parseLong(duration);
+        else d = 0;
+        seekBar.setMax((int) d);
+        SimpleDateFormat format = new SimpleDateFormat("mm:ss");
+        String time = format.format(new Date(d));
+        tvDuration.setText(time);
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        seekBar.setProgress(progress);
+    }
+
+    @Override
+    public Handler getHandler() {
+        return handler;
     }
 }

@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new Presenter(this);
         Intent intent = new Intent(this, BackgroundAudioService.class);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        presenter = new Presenter(getRequiredViewOps());
         setContentView(R.layout.activity_main);
     }
 
@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
         return presenter;
     }
 
+    private MVP_Main.RequiredViewOps getRequiredViewOps(){
+        return this;
+    }
+
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
             BackgroundAudioService.LocalBinder binder = (BackgroundAudioService.LocalBinder) service;
             serviceConnection = binder.getService();
             bound = true;
-            presenter.setModel(serviceConnection);
+//            presenter = serviceConnection.getPresenter();
+                presenter.setModel(serviceConnection);
             Log.i(TAG, "Service connected");
         }
 
