@@ -32,8 +32,14 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        if(player == null)
         player = new MediaPlayer();
         Log.i(TAG, "Service created");
     }
@@ -77,9 +83,9 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     @Override
     public void setData(String data) throws IOException {
         Log.i(TAG, "Service setData " + data);
-        if(player.isPlaying()){
+//        if(player.isPlaying()){
             player.reset();
-        }
+//        }
         player.setDataSource(data);
     }
 
@@ -112,6 +118,13 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     public void onDestroy() {
         super.onDestroy();
         player.release();
+        Log.d(TAG, "onDestroy");
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
     }
 
     public class LocalBinder extends Binder {

@@ -22,11 +22,15 @@ public interface MVP_Main {
         Context getActivityContext();
     }
 
-    interface RequiredSongsListOps{
+    interface RequiredFragmentsOps{
+        void setPresenter(Presenter presenter);
+    }
+
+    interface RequiredSongsListOps extends RequiredFragmentsOps{
         void updateCurrentSong(int currentSongPos, int prevSong);
     }
 
-    interface RequiredControlsOps{
+    interface RequiredControlsOps extends RequiredFragmentsOps{
         void updateSong(String artist, String song, String album, String duration);
         void setProgress(int progress);
         Handler getHandler();

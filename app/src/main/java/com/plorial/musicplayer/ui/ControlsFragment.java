@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
+import com.plorial.musicplayer.presenter.Presenter;
 import com.wnafee.vector.MorphButton;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +24,8 @@ import java.util.Date;
  * Created by plorial on 8/10/16.
  */
 public class ControlsFragment extends Fragment implements View.OnClickListener, MVP_Main.RequiredControlsOps{
+
+    private static final String TAG = ControlsFragment.class.getSimpleName();
 
     private MVP_Main.ProvidedPresenterOps presenter;
 
@@ -44,11 +48,6 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(getActivity() instanceof MainActivity) {
-            MainActivity activity = (MainActivity) getActivity();
-            presenter = activity.getProvidedPresenterOps();
-            presenter.setRequiredControlsOps(this);
-        }
         setupView(view);
     }
 
@@ -118,5 +117,17 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public Handler getHandler() {
         return handler;
+    }
+
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+        presenter.setRequiredControlsOps(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        handler.removeCallbacksAndMessages(null);
     }
 }

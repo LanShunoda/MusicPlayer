@@ -1,5 +1,7 @@
 package com.plorial.musicplayer.ui;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +24,25 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
     private boolean bound = false;
     private MVP_Main.ProvidedModelOps serviceConnection;
 
+    private Fragment[] requredFragmentOps;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = new Intent(this, BackgroundAudioService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        presenter = new Presenter(getRequiredViewOps());
         setContentView(R.layout.activity_main);
+        FragmentManager fragmentManager = getFragmentManager();
+        requredFragmentOps = new Fragment[2];
+        requredFragmentOps[0] = fragmentManager.findFragmentById(R.id.fragment_list);
+        requredFragmentOps[1] = fragmentManager.findFragmentById(R.id.fragment_controls);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, BackgroundAudioService.class);
+        getApplicationContext().startService(intent);
+        getApplicationContext().bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -39,14 +53,6 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
     @Override
     public Context getActivityContext() {
         return this;
-    }
-
-    public MVP_Main.ProvidedPresenterPlaylist getProvidedPresenterPlaylist(){
-        return presenter;
-    }
-
-    public MVP_Main.ProvidedPresenterOps getProvidedPresenterOps(){
-        return presenter;
     }
 
     private MVP_Main.RequiredViewOps getRequiredViewOps(){
@@ -60,8 +66,18 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
             BackgroundAudioService.LocalBinder binder = (BackgroundAudioService.LocalBinder) service;
             serviceConnection = binder.getService();
             bound = true;
-//            presenter = serviceConnection.getPresenter();
+            presenter = serviceConnection.getPresenter();
+            if(presenter == null){
+                Log.d(TAG, "new presenter");
+                presenter = new Presenter(getRequiredViewOps());
                 presenter.setModel(serviceConnection);
+            }
+            for (Fragment f :requredFragmentOps){
+                if(f instanceof MVP_Main.RequiredFragmentsOps){
+                    Log.d(TAG, "set presenter");
+                    ((MVP_Main.RequiredFragmentsOps)f).setPresenter(presenter);
+                }
+            }
             Log.i(TAG, "Service connected");
         }
 
@@ -71,4 +87,15 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
             Log.i(TAG, "Service disconnected");
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(bound && connection != null) {
+            try {
+                getActivityContext().unbindService(connection);
+            }catch (IllegalArgumentException e){}
+            bound = false;
+        }
+    }
 }

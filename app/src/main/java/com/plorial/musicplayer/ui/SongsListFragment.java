@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.SongsArrayAdapter;
+import com.plorial.musicplayer.presenter.Presenter;
 import com.wnafee.vector.compat.VectorDrawable;
 
 /**
@@ -45,12 +46,6 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
         listView.setOnItemClickListener(this);
         play = VectorDrawable.getDrawable(getActivity(), R.drawable.ic_play_arrow_black_36dp);
         audioTrack = VectorDrawable.getDrawable(getActivity(), R.drawable.audiotrack_black);
-        if(getActivity() instanceof MainActivity) {
-            MainActivity activity = (MainActivity) getActivity();
-            presenter = activity.getProvidedPresenterPlaylist();
-            presenter.getAllSongs(adapter);
-            presenter.setRequiredSongsListOps(this);
-        }
     }
 
     @Override
@@ -64,5 +59,12 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 //        AppCompatImageView songOld = (AppCompatImageView) listView.getChildAt(prevSong).findViewById(R.id.playSong);
 //        songNew.setImageDrawable(play);
 //        songOld.setImageDrawable(audioTrack);
+    }
+
+    @Override
+    public void setPresenter(Presenter presenter) {
+        this.presenter = presenter;
+        presenter.getAllSongs(adapter);
+        presenter.setRequiredSongsListOps(this);
     }
 }

@@ -66,7 +66,9 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void selectSong(int position) {
-        requiredSongsListOps.updateCurrentSong(position, currentSong);
+        if(requiredSongsListOps != null) {
+            requiredSongsListOps.updateCurrentSong(position, currentSong);
+        }
         this.currentSong = position;
         SongsListItem currentSong = adapter.getItem(position);
         try {
@@ -75,6 +77,7 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(requiredControlsOps != null)
         requiredControlsOps.updateSong(currentSong.getArtist(), currentSong.getTitle(), currentSong.getAlbum(), currentSong.getDuration());
     }
 
@@ -144,18 +147,20 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     }
 
     private void startPlayProgressUpdater() {
+        Log.d(TAG, "start progress updater, requiredControls ops " + requiredControlsOps);
+        if(requiredControlsOps != null) {
+            requiredControlsOps.setProgress(model.getCurrentPosition());
 
-        requiredControlsOps.setProgress(model.getCurrentPosition());
-
-        if (model.isPlaying()) {
-            Runnable notification = new Runnable() {
-                public void run() {
-                    startPlayProgressUpdater();
-                }
-            };
-            handler.postDelayed(notification,1000);
-        }else{
-            model.pause();
+            if (model.isPlaying()) {
+                Runnable notification = new Runnable() {
+                    public void run() {
+                        startPlayProgressUpdater();
+                    }
+                };
+                handler.postDelayed(notification, 1000);
+            } else {
+                model.pause();
+            }
         }
     }
 }

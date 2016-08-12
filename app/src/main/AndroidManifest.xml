@@ -19,7 +19,8 @@
         </activity>
         <service
             android:enabled="true"
-            android:name="BackgroundAudioService" />
+            android:name="BackgroundAudioService"
+           />
     </application>
 
 </manifest>

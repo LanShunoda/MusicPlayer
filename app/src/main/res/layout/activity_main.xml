@@ -13,17 +13,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="com.plorial.musicplayer.ui.SongsListFragment"
-        android:id="@+id/fragment"
+        android:id="@+id/fragment_list"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         tools:layout="@layout/songs_list_fragment"
-        android:layout_above="@+id/fragment2" />
+        android:layout_above="@+id/fragment_controls" />
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="com.plorial.musicplayer.ui.ControlsFragment"
-        android:id="@+id/fragment2"
+        android:id="@+id/fragment_controls"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         tools:layout="@layout/controls_fragment" />
