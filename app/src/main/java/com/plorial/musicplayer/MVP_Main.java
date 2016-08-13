@@ -79,6 +79,6 @@ public interface MVP_Main {
         Presenter getPresenter();
         boolean isPlaying();
         int getCurrentPosition();
-
+        void prepare();
     }
 }

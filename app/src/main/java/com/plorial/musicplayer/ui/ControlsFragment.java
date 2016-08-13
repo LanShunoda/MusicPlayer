@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -53,7 +54,12 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
 
     private void setupView(View view) {
         playPauseButton = (MorphButton) view.findViewById(R.id.playPauseBtn);
-        playPauseButton.setOnClickListener(this);
+        playPauseButton.setOnStateChangedListener(new MorphButton.OnStateChangedListener() {
+            @Override
+            public void onStateChanged(MorphButton.MorphState changedTo, boolean isAnimating) {
+                playPause(changedTo);
+            }
+        });
         AppCompatImageButton stopButton = (AppCompatImageButton) view.findViewById(R.id.stopBtn);
         stopButton.setOnClickListener(this);
         AppCompatImageButton prevButton = (AppCompatImageButton) view.findViewById(R.id.prevBtn);
@@ -62,6 +68,14 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         nextButton.setOnClickListener(this);
 
         seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        seekBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SeekBar sb = (SeekBar)v;
+                presenter.seekTo(sb.getProgress());
+                return false;
+            }
+        });
 
         tvPlayedTime = (TextView) view.findViewById(R.id.tvPlayedTime);
 
@@ -75,24 +89,26 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.playPauseBtn:
-                if(playPauseButton.getState() == MorphButton.MorphState.START){
-                    presenter.play();
-                    playPauseButton.setState(MorphButton.MorphState.END);
-                } else {
-                    presenter.pause();
-                    playPauseButton.setState(MorphButton.MorphState.START);
-                }
-                break;
             case R.id.stopBtn:
+                Log.d(TAG, "stop");
                 presenter.stop();
                 break;
             case R.id.prevBtn:
+                Log.d(TAG, "prev");
                 presenter.prev();
                 break;
             case R.id.nextBtn:
+                Log.d(TAG, "next");
                 presenter.next();
                 break;
+        }
+    }
+
+    private void playPause(MorphButton.MorphState changedTo) {
+        if(changedTo.equals(MorphButton.MorphState.END)){
+            presenter.pause();
+        }else {
+            presenter.play();
         }
     }
 
@@ -104,14 +120,13 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         if(duration != null) d = Long.parseLong(duration);
         else d = 0;
         seekBar.setMax((int) d);
-        SimpleDateFormat format = new SimpleDateFormat("mm:ss");
-        String time = format.format(new Date(d));
-        tvDuration.setText(time);
+        tvDuration.setText(progressToTime((int) d));
     }
 
     @Override
     public void setProgress(int progress) {
         seekBar.setProgress(progress);
+        tvPlayedTime.setText(progressToTime(progress));
     }
 
     @Override
@@ -129,5 +144,12 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     public void onStop() {
         super.onStop();
         handler.removeCallbacksAndMessages(null);
+    }
+
+    private static String progressToTime(int progress){
+        long second = (progress / 1000) % 60;
+        long minute = (progress / (1000 * 60)) % 60;
+
+        return String.format("%02d:%02d",minute, second);
     }
 }

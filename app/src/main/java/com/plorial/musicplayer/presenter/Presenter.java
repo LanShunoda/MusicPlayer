@@ -31,8 +31,9 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     private MVP_Main.RequiredControlsOps requiredControlsOps;
 
     private SongsArrayAdapter adapter;
-    private int currentSong;
+    private int currentSongNum;
     private Handler handler;
+    private SongsListItem currentSong;
 
     public Presenter(MVP_Main.RequiredViewOps viewOps) {
         this.viewOps = viewOps;
@@ -66,13 +67,15 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void selectSong(int position) {
+        Log.d(TAG, "select song " + position);
         if(requiredSongsListOps != null) {
-            requiredSongsListOps.updateCurrentSong(position, currentSong);
+            requiredSongsListOps.updateCurrentSong(position, currentSongNum);
         }
-        this.currentSong = position;
-        SongsListItem currentSong = adapter.getItem(position);
+        this.currentSongNum = position;
+        currentSong = adapter.getItem(position);
         try {
             model.setData(currentSong.getData());
+            model.prepare();
            play();
         } catch (IOException e) {
             e.printStackTrace();
@@ -104,14 +107,14 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void next() {
-        currentSong++;
-        selectSong(currentSong);
+        currentSongNum++;
+        selectSong(currentSongNum);
     }
 
     @Override
     public void prev() {
-        currentSong--;
-        selectSong(currentSong);
+        currentSongNum--;
+        selectSong(currentSongNum);
     }
 
     @Override
@@ -144,6 +147,10 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     public void setRequiredControlsOps(MVP_Main.RequiredControlsOps requiredControlsOps) {
         this.requiredControlsOps = requiredControlsOps;
         handler = requiredControlsOps.getHandler();
+        if(model.isPlaying()){
+            requiredControlsOps.updateSong(currentSong.getArtist(), currentSong.getTitle(), currentSong.getAlbum(), currentSong.getDuration());
+            startPlayProgressUpdater();
+        }
     }
 
     private void startPlayProgressUpdater() {

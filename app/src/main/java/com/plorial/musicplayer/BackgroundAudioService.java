@@ -47,11 +47,6 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     @Override
     public void play() {
         Log.i(TAG, "Service play");
-        try {
-            player.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         player.start();
     }
 
@@ -62,7 +57,8 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
 
     @Override
     public void stop() {
-        player.stop();
+        player.pause();
+        player.seekTo(0);
     }
 
     @Override
@@ -112,6 +108,15 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     @Override
     public int getCurrentPosition() {
         return player.getCurrentPosition();
+    }
+
+    @Override
+    public void prepare() {
+        try {
+            player.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
