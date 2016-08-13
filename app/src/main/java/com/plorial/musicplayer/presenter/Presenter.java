@@ -107,14 +107,12 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void next() {
-        currentSongNum++;
-        selectSong(currentSongNum);
+        selectSong(currentSongNum + 1);
     }
 
     @Override
     public void prev() {
-        currentSongNum--;
-        selectSong(currentSongNum);
+        selectSong(currentSongNum - 1);
     }
 
     @Override
