@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 
 import com.plorial.musicplayer.presenter.Presenter;
+import com.plorial.musicplayer.ui.SongsListFragment;
 
 import java.io.IOException;
 
@@ -57,6 +58,7 @@ public interface MVP_Main {
         void getAllSongs(SongsArrayAdapter adapter);
         void selectSong(int position);
         void setRequiredSongsListOps(RequiredSongsListOps requiredSongsListOps);
+        void search(SongsListFragment.SearchOption option, String query);
     }
 
     /**

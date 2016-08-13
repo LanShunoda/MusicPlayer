@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.SongsArrayAdapter;
 import com.plorial.musicplayer.pojo.SongsListItem;
+import com.plorial.musicplayer.ui.SongsListFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     private int currentSongNum;
     private Handler handler;
     private SongsListItem currentSong;
+    private ArrayList<SongsListItem> searchList;
 
     public Presenter(MVP_Main.RequiredViewOps viewOps) {
         this.viewOps = viewOps;
@@ -87,6 +89,36 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     @Override
     public void setRequiredSongsListOps(MVP_Main.RequiredSongsListOps requiredSongsListOps) {
         this.requiredSongsListOps = requiredSongsListOps;
+    }
+
+    @Override
+    public void search(SongsListFragment.SearchOption option, String query) {
+        searchList = new ArrayList<SongsListItem>();
+        switch (option) {
+            case TITLE:
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if (adapter.getItem(i).getTitle().toLowerCase().contains(query.toLowerCase())) {
+                    searchList.add(adapter.getItem(i));
+                }
+            }
+                break;
+            case ALBUM:
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    if (adapter.getItem(i).getAlbum().toLowerCase().contains(query.toLowerCase())) {
+                        searchList.add(adapter.getItem(i));
+                    }
+                }
+                break;
+            case ARTIST:
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    if (adapter.getItem(i).getArtist().toLowerCase().contains(query.toLowerCase())) {
+                        searchList.add(adapter.getItem(i));
+                    }
+                }
+                break;
+        }
+        adapter.clear();
+        adapter.addAll(searchList);
     }
 
     @Override

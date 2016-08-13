@@ -1,12 +1,19 @@
 package com.plorial.musicplayer.ui;
 
 import android.app.Fragment;
+import android.app.SearchManager;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,7 +24,6 @@ import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.SongsArrayAdapter;
 import com.plorial.musicplayer.presenter.Presenter;
 import com.wnafee.vector.compat.ResourcesCompat;
-import com.wnafee.vector.compat.VectorDrawable;
 
 /**
  * Created by plorial on 8/9/16.
@@ -32,6 +38,12 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 
     private Drawable play;
     private Drawable audioTrack;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -70,5 +82,68 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
         this.presenter = presenter;
         presenter.getAllSongs(adapter);
         presenter.setRequiredSongsListOps(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.options_menu, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItem searchParams = menu.findItem(R.id.serch_params);
+        final SubMenu params = searchParams.getSubMenu();
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        if(null!=searchManager ) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                presenter.search(getSearchOption(params),query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
+    private SearchOption getSearchOption(SubMenu menu){
+        if(menu.findItem(R.id.menu_album).isChecked()){
+            return SearchOption.ALBUM;
+        } else if(menu.findItem(R.id.menu_artist).isChecked()){
+            return SearchOption.ARTIST;
+        } else return SearchOption.TITLE;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_title:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                break;
+            case R.id.menu_artist:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                break;
+            case R.id.menu_album:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    public enum SearchOption{
+        TITLE, ARTIST, ALBUM
     }
 }
