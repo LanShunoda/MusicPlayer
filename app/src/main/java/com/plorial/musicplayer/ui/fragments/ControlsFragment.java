@@ -1,4 +1,4 @@
-package com.plorial.musicplayer.ui;
+package com.plorial.musicplayer.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -17,9 +17,6 @@ import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.presenter.Presenter;
 import com.wnafee.vector.MorphButton;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by plorial on 8/10/16.
@@ -105,9 +102,9 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void playPause(MorphButton.MorphState changedTo) {
-        if(changedTo.equals(MorphButton.MorphState.END)){
+        if(presenter != null && changedTo.equals(MorphButton.MorphState.END)){
             presenter.pause();
-        }else {
+        }else if (presenter != null && changedTo.equals(MorphButton.MorphState.START)){
             presenter.play();
         }
     }

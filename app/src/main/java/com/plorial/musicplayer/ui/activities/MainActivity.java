@@ -1,4 +1,4 @@
-package com.plorial.musicplayer.ui;
+package com.plorial.musicplayer.ui.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,7 +11,7 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.plorial.musicplayer.BackgroundAudioService;
+import com.plorial.musicplayer.servises.BackgroundAudioService;
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.presenter.Presenter;

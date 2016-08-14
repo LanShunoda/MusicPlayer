@@ -1,4 +1,4 @@
-package com.plorial.musicplayer;
+package com.plorial.musicplayer.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.pojo.SongsListItem;
 
 import java.text.SimpleDateFormat;

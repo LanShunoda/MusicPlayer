@@ -1,8 +1,9 @@
-package com.plorial.musicplayer.ui;
+package com.plorial.musicplayer.ui.fragments;
 
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +22,8 @@ import android.widget.ListView;
 
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
-import com.plorial.musicplayer.SongsArrayAdapter;
+import com.plorial.musicplayer.adapters.SongsArrayAdapter;
+import com.plorial.musicplayer.presenter.ExplorerPresenter;
 import com.plorial.musicplayer.presenter.Presenter;
 import com.wnafee.vector.compat.ResourcesCompat;
 
@@ -32,9 +34,12 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 
     private static final String TAG = SongsListFragment.class.getSimpleName();
 
+    private static final int REQUEST_PATH = 1;
+
+    private MVP_Main.ProvidedPresenterPlaylist presenter;
+
     private ListView listView;
     private SongsArrayAdapter adapter;
-    private MVP_Main.ProvidedPresenterPlaylist presenter;
 
     private Drawable play;
     private Drawable audioTrack;
@@ -137,6 +142,9 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
                 break;
+            case R.id.openFolder:
+                presenter.startFileExplorerActivity(REQUEST_PATH, this);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -145,5 +153,14 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 
     public enum SearchOption{
         TITLE, ARTIST, ALBUM
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PATH){
+            if (resultCode == getActivity().RESULT_OK) {
+                presenter.getSongsFromPath(adapter,data.getStringExtra(ExplorerPresenter.GET_PATH));
+            }
+        }
     }
 }

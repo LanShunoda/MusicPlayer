@@ -24,4 +24,12 @@
             </group>
         </menu>
     </item>
+
+    <item
+        android:id="@+id/openFolder"
+        android:title="Open folder"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_create_new_folder_black_36dp"
+        ></item>
+
 </menu>

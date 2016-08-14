@@ -1,20 +1,26 @@
 package com.plorial.musicplayer.presenter;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.plorial.musicplayer.MVP_Main;
-import com.plorial.musicplayer.SongsArrayAdapter;
+import com.plorial.musicplayer.adapters.SongsArrayAdapter;
 import com.plorial.musicplayer.pojo.SongsListItem;
-import com.plorial.musicplayer.ui.SongsListFragment;
+import com.plorial.musicplayer.ui.activities.FolderExplorerActivity;
+import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +48,24 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     }
 
     public void getAllSongs(SongsArrayAdapter adapter){
-        ContentResolver contentResolver = adapter.getContext().getContentResolver();
+        getSongs(adapter, Environment.getExternalStorageDirectory().getAbsolutePath());
+    }
+
+    @Override
+    public void getSongsFromPath(SongsArrayAdapter adapter, String path) {
+        getSongs(adapter, path);
+    }
+
+    private void getSongs(SongsArrayAdapter adapter, String path){
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        ContentResolver contentResolver = adapter.getContext().getContentResolver();
+        Cursor cursor = contentResolver.query(uri, null, MediaStore.Audio.Media.DATA + " LIKE ? ", new String[]{path + "%"}, null);
+        Log.i(TAG, "cursor rows " + cursor.getCount());
+        adapter.clear();
         if (cursor == null) {
             Log.e(TAG, "Error opening audio");
         } else if (!cursor.moveToFirst()) {
-           Log.i(TAG, "No media on device");
+            Log.i(TAG, "No audio");
             Toast.makeText(getActivityContext(),"No media on device", Toast.LENGTH_LONG).show();
         } else {
             List<SongsListItem> items = new ArrayList<>();
@@ -119,6 +136,12 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
         }
         adapter.clear();
         adapter.addAll(searchList);
+    }
+
+    @Override
+    public void startFileExplorerActivity(int request, Fragment fragment) {
+        Intent intent = new Intent(getActivityContext(), FolderExplorerActivity.class);
+        fragment.startActivityForResult(intent, request);
     }
 
     @Override

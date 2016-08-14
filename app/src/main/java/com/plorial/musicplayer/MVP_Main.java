@@ -1,11 +1,13 @@
 package com.plorial.musicplayer;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 
+import com.plorial.musicplayer.adapters.SongsArrayAdapter;
 import com.plorial.musicplayer.presenter.Presenter;
-import com.plorial.musicplayer.ui.SongsListFragment;
+import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 
 import java.io.IOException;
 
@@ -56,9 +58,11 @@ public interface MVP_Main {
 
     interface ProvidedPresenterPlaylist {
         void getAllSongs(SongsArrayAdapter adapter);
+        void getSongsFromPath(SongsArrayAdapter adapter, String path);
         void selectSong(int position);
         void setRequiredSongsListOps(RequiredSongsListOps requiredSongsListOps);
         void search(SongsListFragment.SearchOption option, String query);
+        void startFileExplorerActivity(int request, Fragment fragment);
     }
 
     /**

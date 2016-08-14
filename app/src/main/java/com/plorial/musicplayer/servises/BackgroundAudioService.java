@@ -1,4 +1,4 @@
-package com.plorial.musicplayer;
+package com.plorial.musicplayer.servises;
 
 import android.app.Service;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.presenter.Presenter;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.IOException;
 /**
  * Created by plorial on 8/10/16.
  */
-public class BackgroundAudioService extends Service implements MVP_Main.ProvidedModelOps{
+public class BackgroundAudioService extends Service implements MVP_Main.ProvidedModelOps {
 
     private final static String TAG = BackgroundAudioService.class.getSimpleName();
 
