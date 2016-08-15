@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
 
     private Presenter presenter;
     private boolean bound = false;
-    private MVP_Main.ProvidedModelOps serviceConnection;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
     private Fragment[] requredFragmentOps;
 
 
@@ -46,10 +43,10 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
         requredFragmentOps[0] = fragmentManager.findFragmentById(R.id.fragment_list);
         requredFragmentOps[1] = fragmentManager.findFragmentById(R.id.fragment_controls);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.drawer_open, R.string.drawer_close);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             BackgroundAudioService.LocalBinder binder = (BackgroundAudioService.LocalBinder) service;
-            serviceConnection = binder.getService();
+            MVP_Main.ProvidedModelOps serviceConnection = binder.getService();
             bound = true;
             presenter = serviceConnection.getPresenter();
             if(presenter == null){

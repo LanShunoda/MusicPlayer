@@ -1,7 +1,6 @@
 package com.plorial.musicplayer.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.pojo.FolderListItem;
-import com.plorial.musicplayer.ui.activities.FolderExplorerActivity;
 
 /**
  * Created by plorial on 8/13/16.

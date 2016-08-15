@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/_00_00"
             android:id="@+id/tvPlayedTime" />
 
         <LinearLayout
@@ -26,19 +26,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Artist - Song"
+                android:text="@string/artist_song"
                 android:id="@+id/tvArtistSong_controls" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Album"
+                android:text="@string/album"
                 android:id="@+id/tvAlbum_controls" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:text="@string/_00_00"
             android:id="@+id/tvDuration_controls" />
 
     </LinearLayout>
@@ -52,7 +52,7 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loop"
+        android:text="@string/loop"
         android:id="@+id/loop" />
 
     <LinearLayout

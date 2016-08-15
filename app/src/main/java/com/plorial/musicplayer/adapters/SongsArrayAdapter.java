@@ -11,10 +11,7 @@ import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.pojo.SongsListItem;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by plorial on 8/9/16.

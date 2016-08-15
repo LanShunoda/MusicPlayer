@@ -23,18 +23,17 @@ public class FolderExplorerActivity extends ListActivity implements AdapterView.
 
     private static final String TAG = FolderExplorerActivity.class.getSimpleName();
 
-    private FolderArrayAdapter adapter;
     private ExplorerPresenter presenter;
-    private File currentDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ListView listView = getListView();
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        adapter = new FolderArrayAdapter(this, R.layout.explorer_item);
+        FolderArrayAdapter adapter = new FolderArrayAdapter(this, R.layout.explorer_item);
         listView.setAdapter(adapter);
         listView.setOnItemLongClickListener(this);
+        File currentDir;
         if(savedInstanceState != null){
             currentDir = new File(savedInstanceState.getString(TAG));
         } else {
@@ -47,7 +46,7 @@ public class FolderExplorerActivity extends ListActivity implements AdapterView.
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this,"Long click to add folder", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.long_click, Toast.LENGTH_LONG).show();
     }
 
     @Override

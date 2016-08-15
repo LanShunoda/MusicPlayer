@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class AudioFileFilter implements FileFilter {
 
-    protected static final String TAG = AudioFileFilter.class.getSimpleName();
+    private static final String TAG = AudioFileFilter.class.getSimpleName();
 
     @Override
     public boolean accept(File f) {
@@ -85,11 +85,11 @@ public class AudioFileFilter implements FileFilter {
         return false;
     }
 
-    public String getFileExtension(File f) {
+    private String getFileExtension(File f) {
         return getFileExtension( f.getName() );
     }
 
-    public String getFileExtension( String fileName ) {
+    private String getFileExtension(String fileName) {
         int i = fileName.lastIndexOf('.');
         if (i > 0) {
             return fileName.substring(i+1);

@@ -12,13 +12,13 @@
             android:title="@string/sort" >
             <menu>
                 <item android:id="@+id/sort_title"
-                    android:title="Sort by Title" />
+                    android:title="@string/sort_by_title" />
                 <item android:id="@+id/sort_artist"
-                    android:title="Sort by Artist" />
+                    android:title="@string/sort_by_artist" />
                 <item android:id="@+id/sort_album"
-                    android:title="Sort by Album" />
+                    android:title="@string/sort_by_album" />
                 <item android:id="@+id/sort_duration"
-                    android:title="Sort by Duration" />
+                    android:title="@string/sort_by_duration" />
             </menu>
         </item>
     </group>

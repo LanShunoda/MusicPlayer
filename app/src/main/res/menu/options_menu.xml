@@ -12,15 +12,15 @@
     <item android:id="@+id/serch_params"
         android:icon="@drawable/ic_subject_black_36px"
         app:showAsAction="ifRoom"
-        android:title="Search params" >
+        android:title="@string/search_params" >
         <menu>
             <group android:checkableBehavior="single">
             <item android:id="@+id/menu_title"
-                android:title="Title" />
+                android:title="@string/title" />
             <item android:id="@+id/menu_artist"
-                android:title="Artist" />
+                android:title="@string/artist" />
             <item android:id="@+id/menu_album"
-                android:title="Album" />
+                android:title="@string/album" />
             </group>
         </menu>
     </item>

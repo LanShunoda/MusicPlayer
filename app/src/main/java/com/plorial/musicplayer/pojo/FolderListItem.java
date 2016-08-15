@@ -1,7 +1,5 @@
 package com.plorial.musicplayer.pojo;
 
-import android.widget.Checkable;
-
 /**
  * Created by plorial on 8/13/16.
  */

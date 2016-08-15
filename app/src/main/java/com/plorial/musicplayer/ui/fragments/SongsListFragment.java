@@ -1,5 +1,6 @@
 package com.plorial.musicplayer.ui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
@@ -53,8 +54,7 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.songs_list_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.songs_list_fragment, container, false);
     }
 
     @Override
@@ -75,17 +75,26 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void updateCurrentSong(int currentSongPos, int prevSong) {
-        Log.d(TAG, "new song");
-        AppCompatImageView songNew = (AppCompatImageView) listView.getChildAt(currentSongPos).findViewById(R.id.playSong);
-        AppCompatImageView songOld = (AppCompatImageView) listView.getChildAt(prevSong).findViewById(R.id.playSong);
-        songNew.setImageDrawable(play);
-        songOld.setImageDrawable(audioTrack);
+        View oldView = listView.getChildAt(currentSongPos);
+        View newView = listView.getChildAt(prevSong);
+        if(oldView != null && newView != null) {
+            AppCompatImageView songNew = (AppCompatImageView) oldView.findViewById(R.id.playSong);
+            AppCompatImageView songOld = (AppCompatImageView) newView.findViewById(R.id.playSong);
+            songNew.setImageDrawable(play);
+            songOld.setImageDrawable(audioTrack);
+        }
     }
 
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
-        presenter.getAllSongs(adapter);
+        Intent intent = getActivity().getIntent();
+        if(intent.getAction() == Intent.ACTION_VIEW){
+            String path = Presenter.getRealPathFromURI(getActivity().getApplicationContext(), intent.getData());
+            presenter.getSongsFromPath(adapter, path);
+        } else {
+            presenter.getAllSongs(adapter);
+        }
         presenter.setRequiredSongsListOps(this);
     }
 
@@ -124,7 +133,6 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
         } else if(menu.findItem(R.id.menu_artist).isChecked()){
             return SearchOption.ARTIST;
         } else return SearchOption.TITLE;
-
     }
 
     @Override
@@ -155,7 +163,8 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_PATH){
-            if (resultCode == getActivity().RESULT_OK) {
+            getActivity();
+            if (resultCode == Activity.RESULT_OK) {
                 presenter.getSongsFromPath(adapter,data.getStringExtra(ExplorerPresenter.GET_PATH));
             }
         }

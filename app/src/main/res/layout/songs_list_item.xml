@@ -20,20 +20,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Artist - Song"
+            android:text="@string/artist_song"
             android:id="@+id/tvArtistSong" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Album"
+            android:text="@string/album"
             android:id="@+id/tvAlbum" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:00"
+        android:text="@string/_00_00"
         android:id="@+id/tvDuration" />
 
 </LinearLayout>

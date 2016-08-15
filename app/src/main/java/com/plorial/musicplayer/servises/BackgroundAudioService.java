@@ -85,9 +85,7 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     @Override
     public void setData(String data) throws IOException {
         Log.i(TAG, "Service setData " + data);
-//        if(player.isPlaying()){
-            player.reset();
-//        }
+        player.reset();
         player.setDataSource(data);
     }
 

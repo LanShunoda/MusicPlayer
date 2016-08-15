@@ -1,6 +1,5 @@
 package com.plorial.musicplayer.presenter;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,12 +14,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.plorial.musicplayer.MVP_Main;
+import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.adapters.SongsArrayAdapter;
 import com.plorial.musicplayer.pojo.SongsListItem;
 import com.plorial.musicplayer.ui.activities.FolderExplorerActivity;
 import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,7 +41,6 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     private int currentSongNum;
     private Handler handler;
     private SongsListItem currentSong;
-    private ArrayList<SongsListItem> searchList;
 
     public Presenter(MVP_Main.RequiredViewOps viewOps) {
         this.viewOps = viewOps;
@@ -61,14 +59,14 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = adapter.getContext().getContentResolver();
         Cursor cursor = contentResolver.query(uri, null, MediaStore.Audio.Media.DATA + " LIKE ? ", new String[]{path + "%"}, null);
-        Log.i(TAG, "cursor rows " + cursor.getCount());
         adapter.clear();
         if (cursor == null) {
             Log.e(TAG, "Error opening audio");
         } else if (!cursor.moveToFirst()) {
-            Log.i(TAG, "No audio");
-            Toast.makeText(getActivityContext(),"No media on device", Toast.LENGTH_LONG).show();
+            Log.i(TAG, getActivityContext().getString(R.string.no_audio));
+            Toast.makeText(getActivityContext(), R.string.no_audio, Toast.LENGTH_LONG).show();
         } else {
+            Log.i(TAG, "cursor rows " + cursor.getCount());
             List<SongsListItem> items = new ArrayList<>();
             do {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
@@ -82,6 +80,7 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
             } while (cursor.moveToNext());
             adapter.addAll(items);
         }
+        cursor.close();
         this.adapter = adapter;
     }
 
@@ -111,7 +110,7 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void search(SongsListFragment.SearchOption option, String query) {
-        searchList = new ArrayList<SongsListItem>();
+        ArrayList<SongsListItem> searchList = new ArrayList<SongsListItem>();
         switch (option) {
             case TITLE:
             for (int i = 0; i < adapter.getCount(); i++) {
@@ -168,12 +167,17 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
 
     @Override
     public void next() {
-        selectSong(currentSongNum + 1);
+        int next = currentSongNum + 1;
+        if(adapter.getCount() == next)
+        next = 0;
+        selectSong(next);
     }
 
     @Override
     public void prev() {
-        selectSong(currentSongNum - 1);
+        if(currentSongNum == 0)
+            currentSongNum = adapter.getCount() - 1;
+        selectSong(currentSongNum);
     }
 
     @Override
@@ -218,7 +222,6 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     }
 
     private void startPlayProgressUpdater() {
-        Log.d(TAG, "start progress updater, requiredControls ops " + requiredControlsOps);
         if(requiredControlsOps != null) {
             requiredControlsOps.setProgress(model.getCurrentPosition());
 
@@ -233,5 +236,23 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
                 model.pause();
             }
         }
+    }
+
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return "";
     }
 }

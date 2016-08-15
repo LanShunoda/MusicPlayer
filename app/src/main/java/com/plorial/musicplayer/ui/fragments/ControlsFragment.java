@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageButton;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -31,7 +29,6 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
 
     private Handler handler = new Handler();
 
-    private MorphButton playPauseButton;
     private SeekBar seekBar;
     private TextView tvPlayedTime;
     private TextView tvDuration;
@@ -42,8 +39,7 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.controls_fragment, container, false);
-        return view;
+        return inflater.inflate(R.layout.controls_fragment, container, false);
     }
 
     @Override
@@ -53,7 +49,7 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setupView(View view) {
-        playPauseButton = (MorphButton) view.findViewById(R.id.playPauseBtn);
+        MorphButton playPauseButton = (MorphButton) view.findViewById(R.id.playPauseBtn);
         playPauseButton.setOnStateChangedListener(new MorphButton.OnStateChangedListener() {
             @Override
             public void onStateChanged(MorphButton.MorphState changedTo, boolean isAnimating) {
@@ -72,7 +68,9 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                presenter.seekTo(i);
+                if(presenter != null) {
+                    presenter.seekTo(i);
+                }
                 seekBar.setProgress(i);
             }
 
@@ -102,15 +100,12 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.stopBtn:
-                Log.d(TAG, "stop");
                 presenter.stop();
                 break;
             case R.id.prevBtn:
-                Log.d(TAG, "prev");
                 presenter.prev();
                 break;
             case R.id.nextBtn:
-                Log.d(TAG, "next");
                 presenter.next();
                 break;
         }

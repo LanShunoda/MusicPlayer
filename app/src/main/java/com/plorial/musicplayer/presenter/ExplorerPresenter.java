@@ -1,7 +1,6 @@
 package com.plorial.musicplayer.presenter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ListView;
@@ -85,7 +84,7 @@ public class ExplorerPresenter {
         FolderListItem item = adapter.getItem(position);
         Intent intent = new Intent();
         intent.putExtra(GET_PATH, item.getPath());
-        activity.setResult(activity.RESULT_OK, intent);
+        activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
 
