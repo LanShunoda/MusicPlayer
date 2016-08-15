@@ -34,7 +34,7 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
 
     private static final String TAG = SongsListFragment.class.getSimpleName();
 
-    private static final int REQUEST_PATH = 1;
+    public static final int REQUEST_PATH = 1;
 
     private MVP_Main.ProvidedPresenterPlaylist presenter;
 
@@ -60,7 +60,7 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.listView);
+        listView = (ListView) view.findViewById(R.id.songsList);
         adapter = new SongsArrayAdapter(getActivity(), R.layout.songs_list_item);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
@@ -141,9 +141,6 @@ public class SongsListFragment extends Fragment implements AdapterView.OnItemCli
             case R.id.menu_album:
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
-                break;
-            case R.id.openFolder:
-                presenter.startFileExplorerActivity(REQUEST_PATH, this);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

@@ -8,33 +8,51 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
-import com.plorial.musicplayer.servises.BackgroundAudioService;
 import com.plorial.musicplayer.MVP_Main;
 import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.presenter.Presenter;
+import com.plorial.musicplayer.servises.BackgroundAudioService;
+import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 
-public class MainActivity extends AppCompatActivity implements MVP_Main.RequiredViewOps{
+public class MainActivity extends AppCompatActivity implements MVP_Main.RequiredViewOps, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private Presenter presenter;
     private boolean bound = false;
     private MVP_Main.ProvidedModelOps serviceConnection;
-
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
     private Fragment[] requredFragmentOps;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.navigation_drawer);
+
         FragmentManager fragmentManager = getFragmentManager();
         requredFragmentOps = new Fragment[2];
         requredFragmentOps[0] = fragmentManager.findFragmentById(R.id.fragment_list);
         requredFragmentOps[1] = fragmentManager.findFragmentById(R.id.fragment_controls);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -96,6 +114,29 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
                 getActivityContext().unbindService(connection);
             }catch (IllegalArgumentException e){}
             bound = false;
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.openFolder:
+                presenter.startFileExplorerActivity(SongsListFragment.REQUEST_PATH, requredFragmentOps[0]);
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }
