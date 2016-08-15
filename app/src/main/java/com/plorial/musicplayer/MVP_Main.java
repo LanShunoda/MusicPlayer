@@ -6,10 +6,12 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 
 import com.plorial.musicplayer.adapters.SongsArrayAdapter;
+import com.plorial.musicplayer.pojo.SongsListItem;
 import com.plorial.musicplayer.presenter.Presenter;
 import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 /**
  * Created by plorial on 8/10/16.
@@ -63,6 +65,7 @@ public interface MVP_Main {
         void setRequiredSongsListOps(RequiredSongsListOps requiredSongsListOps);
         void search(SongsListFragment.SearchOption option, String query);
         void startFileExplorerActivity(int request, Fragment fragment);
+        void sort(Comparator<SongsListItem> comparator);
     }
 
     /**

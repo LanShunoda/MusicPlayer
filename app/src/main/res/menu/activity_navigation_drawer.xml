@@ -4,9 +4,22 @@
     <group>
         <item
             android:id="@+id/openFolder"
-            android:title="Open folder"
+            android:title="@string/open_folder"
             android:icon="@drawable/ic_create_new_folder_black_36dp"
             ></item>
-
+        <item android:id="@+id/sort_params"
+            android:icon="@drawable/ic_compare_arrows_black_36dp"
+            android:title="@string/sort" >
+            <menu>
+                <item android:id="@+id/sort_title"
+                    android:title="Sort by Title" />
+                <item android:id="@+id/sort_artist"
+                    android:title="Sort by Artist" />
+                <item android:id="@+id/sort_album"
+                    android:title="Sort by Album" />
+                <item android:id="@+id/sort_duration"
+                    android:title="Sort by Duration" />
+            </menu>
+        </item>
     </group>
 </menu>

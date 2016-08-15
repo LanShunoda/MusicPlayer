@@ -23,6 +23,7 @@ import com.plorial.musicplayer.ui.fragments.SongsListFragment;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -136,6 +137,11 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
         }
         adapter.clear();
         adapter.addAll(searchList);
+    }
+
+    @Override
+    public void sort(Comparator<SongsListItem> comparator) {
+        adapter.sort(comparator);
     }
 
     @Override

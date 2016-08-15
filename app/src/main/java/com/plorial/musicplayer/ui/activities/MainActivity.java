@@ -22,6 +22,7 @@ import com.plorial.musicplayer.R;
 import com.plorial.musicplayer.presenter.Presenter;
 import com.plorial.musicplayer.servises.BackgroundAudioService;
 import com.plorial.musicplayer.ui.fragments.SongsListFragment;
+import com.plorial.musicplayer.utils.SongsSort;
 
 public class MainActivity extends AppCompatActivity implements MVP_Main.RequiredViewOps, NavigationView.OnNavigationItemSelectedListener {
 
@@ -123,6 +124,18 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
         switch (id){
             case R.id.openFolder:
                 presenter.startFileExplorerActivity(SongsListFragment.REQUEST_PATH, requredFragmentOps[0]);
+                break;
+            case R.id.sort_title:
+                presenter.sort(new SongsSort.SortByTitle());
+                break;
+            case R.id.sort_album:
+                presenter.sort(new SongsSort.SortByAlbum());
+                break;
+            case R.id.sort_artist:
+                presenter.sort(new SongsSort.SortByArtist());
+                break;
+            case R.id.sort_duration:
+                presenter.sort(new SongsSort.SortByDuration());
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
