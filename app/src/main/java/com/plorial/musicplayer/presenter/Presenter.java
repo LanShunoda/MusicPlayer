@@ -177,6 +177,11 @@ public class Presenter implements MVP_Main.ProvidedPresenterPlaylist, MVP_Main.P
     }
 
     @Override
+    public void loop(boolean l) {
+        model.loop(l);
+    }
+
+    @Override
     public void seekTo(int position) {
         model.seekTo(position);
     }

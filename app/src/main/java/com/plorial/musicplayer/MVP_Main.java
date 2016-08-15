@@ -47,6 +47,7 @@ public interface MVP_Main {
         void stop();
         void next();
         void prev();
+        void loop(boolean l);
         void seekTo(int position);}
 
     /**

@@ -73,6 +73,11 @@ public class BackgroundAudioService extends Service implements MVP_Main.Provided
     }
 
     @Override
+    public void loop(boolean l) {
+        player.setLooping(l);
+    }
+
+    @Override
     public void seekTo(int position) {
         player.seekTo(position);
     }

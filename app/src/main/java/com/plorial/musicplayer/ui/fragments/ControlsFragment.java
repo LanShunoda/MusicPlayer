@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.plorial.musicplayer.MVP_Main;
@@ -21,7 +23,7 @@ import com.wnafee.vector.MorphButton;
 /**
  * Created by plorial on 8/10/16.
  */
-public class ControlsFragment extends Fragment implements View.OnClickListener, MVP_Main.RequiredControlsOps{
+public class ControlsFragment extends Fragment implements View.OnClickListener, MVP_Main.RequiredControlsOps, CompoundButton.OnCheckedChangeListener{
 
     private static final String TAG = ControlsFragment.class.getSimpleName();
 
@@ -35,6 +37,7 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
     private TextView tvDuration;
     private TextView tvArtistSong;
     private TextView tvAlbum;
+    private Switch switchLoop;
 
     @Nullable
     @Override
@@ -65,12 +68,22 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         nextButton.setOnClickListener(this);
 
         seekBar = (SeekBar) view.findViewById(R.id.seekBar);
-        seekBar.setOnTouchListener(new View.OnTouchListener() {
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                SeekBar sb = (SeekBar)v;
-                presenter.seekTo(sb.getProgress());
-                return false;
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                presenter.seekTo(i);
+                seekBar.setProgress(i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
@@ -81,6 +94,8 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         tvArtistSong = (TextView) view.findViewById(R.id.tvArtistSong_controls);
 
         tvAlbum = (TextView) view.findViewById(R.id.tvAlbum_controls);
+        switchLoop = (Switch) view.findViewById(R.id.loop);
+        switchLoop.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -148,5 +163,11 @@ public class ControlsFragment extends Fragment implements View.OnClickListener, 
         long minute = (progress / (1000 * 60)) % 60;
 
         return String.format("%02d:%02d",minute, second);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switchLoop.setChecked(b);
+        presenter.loop(b);
     }
 }
