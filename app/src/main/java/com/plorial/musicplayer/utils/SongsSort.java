@@ -61,4 +61,12 @@ public class SongsSort {
             }
         }
     }
+
+    public static class SortByRandom implements Comparator<SongsListItem>{
+
+        @Override
+        public int compare(SongsListItem i1, SongsListItem i2) {
+            return Math.random() < 0.5 ? 1 : -1;
+        }
+    }
 }

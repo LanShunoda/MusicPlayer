@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity implements MVP_Main.Required
             case R.id.sort_duration:
                 presenter.sort(new SongsSort.SortByDuration());
                 break;
+            case R.id.shuffle:
+                presenter.sort(new SongsSort.SortByRandom());
+                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

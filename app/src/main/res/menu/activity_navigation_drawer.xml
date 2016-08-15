@@ -22,4 +22,9 @@
             </menu>
         </item>
     </group>
+    <item
+        android:id="@+id/shuffle"
+        android:title="@string/Shuffle"
+        android:icon="@drawable/ic_shuffle_black_36px"
+        ></item>
 </menu>
